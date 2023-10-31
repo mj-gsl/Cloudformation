@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: CloudFormation template for VPC, IGW, Public Subnet, EC2 Instance, Security Group, and S3 Bucket.
+Description: CloudFormation template for VPC, IGW, Public Subnet, EC2 Instance, Security Group, and S3 Bucket for Group1(Mojtaba, Erdal, and Mikhail).
 
 Resources:
   MyVPC:
@@ -22,6 +22,7 @@ Resources:
       VpcId: !Ref MyVPC
       CidrBlock: "10.0.0.0/24"
       AvailabilityZone: 'eu-central-1a'
+      MapPublicIpOnLaunch: true
 
   MyEC2Instance:
     Type: "AWS::EC2::Instance"
@@ -29,12 +30,14 @@ Resources:
       InstanceType: "t2.micro"
       ImageId: "ami-04376654933b081a7"
       SubnetId: !Ref PublicSubnet
+      SecurityGroupIds:
+        - !GetAtt MySecurityGroup.GroupId
 
   MySecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
-      GroupDescription: "Allow incoming traffic on port 8000"
-      VpcId: !Ref MyVPC  # Specify the VPC ID here
+      GroupDescription: "Allow incoming traffic on port 8000, SSH, HTTP, and HTTPS"
+      VpcId: !Ref MyVPC
       SecurityGroupIngress:
         - CidrIp: "0.0.0.0/0"
           FromPort: 8000
